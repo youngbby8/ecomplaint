@@ -19,31 +19,35 @@ $msg['message'] = '';
 
 
 // CHECK IF RECEIVED DATA FROM THE REQUEST
-if(isset($_POST["Institution"]) && isset($_POST["Category"]) && isset($_POST["Comp_address"]) && isset($_POST["Description"]) && isset($_POST["name"])){
+if(isset($_GET["name"])){
     // CHECK DATA VALUE IS EMPTY OR NOT
-    $Institution = $_POST["Institution"];
-    $Category = $_POST["Category"];
-    $Comp_address = $_POST["Comp_address"];
-    $Description = $_POST["Description"];
-    $name = $_POST["name"];
-    $date = date("Y-m-d h:i:s");
+    $name = $_GET["name"];
 
-    try{
-
-        $insert_query = "INSERT INTO `e_complaint`(institution,category,comp_address,description,customer,date,status) VALUES(:institution,:cat_name,:comp_address,:description,:name,:date,'sent')";
+    try{ 
+        $insert_query = "SELECT * FROM e_complaint WHERE technician = :name";
+        
         $insert_stmt = $conn->prepare($insert_query);
          
+       
         // DATA BINDING
-        $insert_stmt->bindParam(':institution',$Institution, PDO::PARAM_STR);
-        $insert_stmt->bindParam(':cat_name',$Category , PDO::PARAM_STR);
-        $insert_stmt->bindParam(':comp_address',$Comp_address, PDO::PARAM_STR);
-        $insert_stmt->bindParam(':description',$Description, PDO::PARAM_STR);
-        $insert_stmt->bindParam(':date',$date, PDO::PARAM_STR);
         $insert_stmt->bindParam(':name',$name, PDO::PARAM_STR);
 
-        
         if($insert_stmt->execute()){
             
+            if($insert_stmt->rowCount() > 0){
+                // CREATE POSTS ARRAY
+                $msg['complaints'] = array();
+                
+                while($row = $insert_stmt->fetch(PDO::FETCH_ASSOC)){
+                    array_push($msg['complaints'],$row);  
+                 }
+            
+                //SHOW POST/POSTS IN JSON FORMAT
+                $msg['message'] = true;
+                //echo json_encode($msg);
+             
+            
+            }
             $msg['message'] = true;
            
         }else{

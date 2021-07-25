@@ -19,7 +19,14 @@ if(isset($_POST['status']) && isset($_POST['id'])){
     $id = $_POST['id'];
     // CHECK DATA VALUE IS EMPTY OR NOT
     try{
-        $insert_query = "UPDATE e_complaint SET status = '$status' WHERE comp_id = '$id'";
+
+        if(isset($_POST['to'])){
+            $to = $_POST['to'];
+            $insert_query = "UPDATE e_complaint SET status = '$status',technician = '$to' WHERE comp_id = '$id'";
+        }else{
+            $insert_query = "UPDATE e_complaint SET status = '$status' WHERE comp_id = '$id'";
+        }
+        
         
         $insert_stmt = $conn->prepare($insert_query);
          

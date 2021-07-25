@@ -43,8 +43,11 @@ try{
             //echo json_encode($msg);
          
         
+        }else{
+            $msg['complaints'] = array();
+            $msg['message'] = true;
         }
-        $msg['message'] = true;
+        
        
     }else{
         $msg['message'] = false;
