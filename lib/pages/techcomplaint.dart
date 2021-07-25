@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,15 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'DrawerMenu.dart';
 import 'networking.dart';
 
-class customerComplaint extends StatefulWidget {
-  const customerComplaint({Key? key}) : super(key: key);
+class techcomplaint extends StatefulWidget {
+  const techcomplaint({Key? key}) : super(key: key);
 
   @override
-  _customerComplaintState createState() => _customerComplaintState();
+  _techcomplaintState createState() => _techcomplaintState();
 }
 
-class _customerComplaintState extends State<customerComplaint> {
-
+class _techcomplaintState extends State<techcomplaint> {
   int _selectedIndex = 0;
   late Widget iptisam ;
   List comps = [];
@@ -33,10 +32,6 @@ class _customerComplaintState extends State<customerComplaint> {
           iptisam = confirm(context);
           _selectedIndex = index;
           break;
-        case 2:
-          iptisam = rejected(context);
-          _selectedIndex = index;
-          break;
       }
     });
   }
@@ -46,7 +41,7 @@ class _customerComplaintState extends State<customerComplaint> {
 
     networking net = new networking();
 
-    String ans = await net.get(context, "getCustomerComplaint.php?name="+sp.getString("name").toString());
+    String ans = await net.get(context, "getTechComplaint.php?name="+sp.getString("name").toString());
     print("going to getCustomerComplaint.php?name="+sp.getString("name").toString());
 
     if (ans == "") {
@@ -89,7 +84,7 @@ class _customerComplaintState extends State<customerComplaint> {
         centerTitle: true,
         backgroundColor: Colors.blueGrey,
       ),
-      endDrawer: draw(context),
+      endDrawer: techdrawer(context),
       bottomNavigationBar: BottomNavigationBar(
         //showUnselectedLabels: false,
         currentIndex: _selectedIndex,
@@ -99,14 +94,10 @@ class _customerComplaintState extends State<customerComplaint> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.query_builder),
-            label: "Sent :",
+            label: "Pending :",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.check_circle_outline),
-            label: "In-progress :",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.close_rounded),
             label: "Solved :",
           ),
         ],
@@ -131,77 +122,7 @@ class _customerComplaintState extends State<customerComplaint> {
             flex: 1,
             child: Center(
               child: Text(
-                "Sent Complaints :",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 9,
-            child: Container(
-              padding: EdgeInsets.all(20),
-              child: ListView(
-                children: comps.map((e){
-
-                  if (e['status'] == "sent"){
-                    return  Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-
-                      ),
-                      //color: Color.fromRGBO(0, 0, 80, 0.8),
-                      child:ListTile(
-                        title: Container(
-                          padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                          child: Text(
-                            "${e['category']}",
-                            style: TextStyle(
-                                fontStyle: FontStyle.italic
-                            ),
-
-                          ),
-                        ),
-                        leading: Text(
-                          "${e['institution']}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-
-                        ),
-                        trailing: Text(
-                            "${e['status']}"
-                        ),
-                        onTap: (){
-                          studialog(e);
-                        },
-                      ),
-
-                    );
-                  }else{
-                    return Container();
-                  }
-                }).toList(),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-
-  }
-
-  Widget confirm(context){
-    return Container(
-      child: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: Text(
-                "In-progress Complaints :",
+                "Pending Complaints :",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
@@ -241,8 +162,89 @@ class _customerComplaintState extends State<customerComplaint> {
                           ),
 
                         ),
-                        trailing: Text(
-                            "${e['status']}"
+                        trailing: ElevatedButton(
+                          child: Text(
+                              "SOLVED ?"
+                          ),
+                          onPressed: () async{
+                            networking net = new networking();
+
+                            showDialog(
+                                context: context,
+                                builder: (context){
+                                  return AlertDialog(
+                                    scrollable: true,
+                                    content: Builder(
+                                        builder: (BuildContext context) {
+                                          return Container(
+                                            color: Colors.white,
+                                            child: Column(
+                                              children: [
+
+                                                Center(
+                                                  child: Text(
+                                                    "Please Confirm",
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 25
+                                                    )
+                                                  ),
+                                                ),
+
+                                                Divider(),
+
+                                                Text(
+                                                    "are you sure you have solved the complaint ?"
+                                                ),
+
+                                                Divider(),
+
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: ElevatedButton(
+                                                        child: Text("no"),
+                                                        onPressed: (){
+                                                          Navigator.pop(context);
+                                                        },
+                                                      ),
+                                                    ),
+                                                    VerticalDivider(),
+                                                    Expanded(
+                                                      child: ElevatedButton(
+                                                        child: Text("yes"),
+                                                        onPressed: () async{
+                                                          String ans = await net.post(context, "changestatus.php", {"id" : e['comp_id'].toString(), "status" : "solved"});
+                                                          print("going to changestatus.php?");
+                                                          if (ans == "") {
+                                                            Fluttertoast.showToast(msg: "failed to set complaint as solved");
+
+                                                          } else {
+                                                            print(ans);
+                                                            Map data = jsonDecode(ans);
+                                                            if (data["message"] == true) {
+                                                              Navigator.pop(context);
+                                                              Fluttertoast.showToast(msg: "complaint set to SOLVED!");
+                                                              Navigator.pushNamed(context, "/techcomplaint");
+                                                            } else {
+                                                              Fluttertoast.showToast(msg: "API ERROR", backgroundColor: Colors.black);
+                                                            }
+                                                          }
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                    ),
+                                  );
+                                }
+                            );
+                          },
                         ),
                         onTap: (){
                           studialog(e);
@@ -263,7 +265,7 @@ class _customerComplaintState extends State<customerComplaint> {
 
   }
 
-  Widget rejected(context){
+  Widget confirm(context){
     return Container(
       child: Column(
         children: [
@@ -271,7 +273,7 @@ class _customerComplaintState extends State<customerComplaint> {
             flex: 1,
             child: Center(
               child: Text(
-                "Sloved Complaints :",
+                "Solved Complaints :",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
@@ -332,6 +334,7 @@ class _customerComplaintState extends State<customerComplaint> {
     );
 
   }
+
 
   void studialog(e){
     showDialog(
@@ -489,6 +492,4 @@ class _customerComplaintState extends State<customerComplaint> {
       },
     );
   }
-
-
 }

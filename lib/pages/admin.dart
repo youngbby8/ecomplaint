@@ -330,6 +330,8 @@ class _adminState extends State<admin> {
                                                     if (data["message"] == true) {
                                                       Navigator.pop(context);
                                                       Fluttertoast.showToast(msg:"customer registered successfully", backgroundColor: Colors.black);
+
+                                                      Navigator.pushNamed(context, "/admin");
                                                     } else {
                                                       Navigator.pop(context);
                                                       Fluttertoast.showToast(msg: "failed to register customer", backgroundColor: Colors.black);
@@ -647,7 +649,7 @@ class _adminState extends State<admin> {
 
                                               Map data = jsonDecode(ans);
                                               if (data["message"] == true) {
-                                                Fluttertoast.showToast(msg:"category SUCCESSFULLY added", backgroundColor: Colors.black);
+                                                Fluttertoast.showToast(msg:"instutution SUCCESSFULLY added", backgroundColor: Colors.black);
                                                 if (data["role"] == "customer") {
                                                   Navigator.pushNamed(context, "/CustomerHome");
                                                 } else if (data["role"] == "admin") {

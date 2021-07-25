@@ -98,15 +98,15 @@ class _complaintsState extends State<complaints> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.query_builder),
-            label: "Pending :",
+            label: "Sent :",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.check_circle_outline),
-            label: "Confirmed :",
+            label: "In-progress :",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.close_rounded),
-            label: "Rejected :",
+            label: "solved :",
           ),
         ],
       ),
@@ -130,7 +130,7 @@ class _complaintsState extends State<complaints> {
             flex: 1,
             child: Center(
               child: Text(
-                "Pending Complaints :",
+                "Sent Complaints :",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
@@ -145,7 +145,7 @@ class _complaintsState extends State<complaints> {
               child: ListView(
                 children: comps.map((e){
 
-                  if (e['status'] == "pending"){
+                  if (e['status'] == "sent"){
                     return  Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
@@ -200,7 +200,7 @@ class _complaintsState extends State<complaints> {
             flex: 1,
             child: Center(
               child: Text(
-                "Confirmed Complaints :",
+                "in-progress Complaints :",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
@@ -215,7 +215,7 @@ class _complaintsState extends State<complaints> {
               child: ListView(
                 children: comps.map((e){
 
-                  if (e['status'] == "confirmed"){
+                  if (e['status'] == "in-progress"){
                     return  Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
@@ -270,7 +270,7 @@ class _complaintsState extends State<complaints> {
             flex: 1,
             child: Center(
               child: Text(
-                "Rejected Complaints :",
+                "Solved Complaints :",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
@@ -285,7 +285,7 @@ class _complaintsState extends State<complaints> {
               child: ListView(
                 children: comps.map((e){
 
-                  if (e['status'] == "rejected"){
+                  if (e['status'] == "solved"){
                     return  Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),

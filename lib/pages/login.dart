@@ -155,6 +155,9 @@ class _loginState extends State<login> {
                           } else if (data["role"] == "admin") {
                             sp.setString("location", "/admin");
                             Navigator.pushNamed(context, "/admin");
+                          } else if (data["role"] == "technician") {
+                            sp.setString("location", "/technician");
+                            Navigator.pushNamed(context, "/technician");
                           } else {
                             sp.setString("location", "/staff");
                             Navigator.pushNamed(context, "/staff");

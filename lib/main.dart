@@ -5,6 +5,8 @@ import 'package:ecomplains/pages/complaints.dart';
 import 'package:ecomplains/pages/customerComplaint.dart';
 import 'package:ecomplains/pages/callcenter.dart';
 import 'package:ecomplains/pages/staffcomplaint.dart';
+import 'package:ecomplains/pages/techcomplaint.dart';
+import 'package:ecomplains/pages/technician.dart';
 import 'package:ecomplains/pages/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:ecomplains/pages/login.dart';
@@ -27,6 +29,8 @@ void main() => runApp(MaterialApp(
         "/tools": (context) => tools(),
         "/complaints": (context) => complaints(),
         "/staffcomplaints": (context) => staffcomplaint(),
+        "/technician": (context) => technician(),
+        "/techcomplaint": (context) => techcomplaint(),
       },
       home: mainActivity(),
     ));

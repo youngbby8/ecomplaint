@@ -17,7 +17,7 @@ class staffcomplaint extends StatefulWidget {
 }
 
 class _staffcomplaintState extends State<staffcomplaint> {
-  String val = "pending";
+  String val = "sent";
   List tecs = [];
   List compp = [];
   late SharedPreferences sp;
@@ -123,29 +123,23 @@ class _staffcomplaintState extends State<staffcomplaint> {
                       value: val,
                       items: [
                         DropdownMenuItem(
-                          value: "pending",
+                          value: "sent",
                           child: Text(
-                            "Pending"
+                            "sent"
                           )
                         ),
                         DropdownMenuItem(
-                            value: "recieved",
+                            value: "in-progress",
                             child: Text(
-                                "Recieved"
+                                "in-progress"
                             )
                         ),
                         DropdownMenuItem(
-                            value: "assigned",
+                            value: "solved",
                             child: Text(
-                                "Assigned"
+                                "solved"
                             )
                         ),
-                        DropdownMenuItem(
-                            value: "confirmed",
-                            child: Text(
-                                "Confirmed"
-                            )
-                        )
                       ],
 
                     ),
@@ -212,9 +206,9 @@ class _staffcomplaintState extends State<staffcomplaint> {
           ),
 
         ),
-        trailing: ElevatedButton(
+        trailing: e['status'] != "sent" ? Text("${e['status']}") : ElevatedButton(
           child: Text(
-            "Assign"
+              "Assign"
           ),
           onPressed: () async{
             await gettec().then((value) {
@@ -250,7 +244,7 @@ class _staffcomplaintState extends State<staffcomplaint> {
                                           onPressed: () async{
                                             networking net = new networking();
 
-                                            String ans = await net.post(context, "changestatus.php", {"id" : e['comp_id'].toString(), "status" : "assigned"});
+                                            String ans = await net.post(context, "changestatus.php", {"id" : e['comp_id'].toString(), "status" : "in-progress", "to": f['full_name'].toString()});
                                             print("going to changestatus.php?");
                                             if (ans == "") {
                                               Fluttertoast.showToast(msg: "failed to assign complaint to ${f['full_name']}");
@@ -259,9 +253,8 @@ class _staffcomplaintState extends State<staffcomplaint> {
                                               print(ans);
                                               Map data = jsonDecode(ans);
                                               if (data["message"] == true) {
-                                                Navigator.pop(context);
                                                 Fluttertoast.showToast(msg: "complaint assignd to ${f['full_name']}");
-
+                                                Navigator.pushNamed(context, "/staffcomplaint");
                                               } else {
                                                 Fluttertoast.showToast(msg: "API ERROR", backgroundColor: Colors.black);
                                               }

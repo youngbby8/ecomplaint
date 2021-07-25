@@ -8,14 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'DrawerMenu.dart';
 import 'networking.dart';
 
-class staff extends StatefulWidget {
-  const staff({Key? key}) : super(key: key);
+class technician extends StatefulWidget {
+  const technician({Key? key}) : super(key: key);
 
   @override
-  _staffState createState() => _staffState();
+  _technicianState createState() => _technicianState();
 }
 
-class _staffState extends State<staff> {
+class _technicianState extends State<technician> {
 
   bool have = false;
   late Map abc;
@@ -50,7 +50,7 @@ class _staffState extends State<staff> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Call Center",
+          "Technician",
           style: TextStyle(
               color: Colors.white
           ),
@@ -58,7 +58,7 @@ class _staffState extends State<staff> {
         centerTitle: true,
         backgroundColor: Colors.blueGrey,
       ),
-      endDrawer: staffdrawer(context),
+      endDrawer: techdrawer(context),
       body: Container(
         color: Colors.white,
         child: Column(
